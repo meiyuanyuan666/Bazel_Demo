@@ -1,16 +1,25 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_import")
 
-cc_library(
+cc_import(
     name = "hello-greet",
-    srcs = ["hello-greet.cc"],
     hdrs = ["hello-greet.h"],
+    static_library = "libhello-greet.a",
+    shared_library = "libhello-greet.so",
 )
+
+cc_import(
+    name = "hello-time",
+    hdrs = ["hello-time.h"],
+    static_library = "libhello-time.a",
+    shared_library = "libhello-time.so",
+)
+
 
 cc_binary(
     name = "hello-world",
     srcs = ["hello-world.cc"],
     deps = [
         ":hello-greet",
-        "//lib:hello-time",
+        ":hello-time",
     ],
 )

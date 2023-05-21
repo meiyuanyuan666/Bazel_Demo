@@ -1,0 +1,22 @@
+workspace(name = "bazel_test")
+ 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+ 
+http_archive(
+    name = "com_github_eigen_eigen",
+    sha256 = "dd254beb0bafc695d0f62ae1a222ff85b52dbaa3a16f76e781dce22d0d20a4a6",
+    strip_prefix = "eigen-eigen-5a0156e40feb",
+    urls = [
+        "https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.bz2",
+    ],
+    build_file_content =
+"""
+cc_library(
+    name = 'eigen',
+    srcs = [],
+    includes = ['.'],
+    hdrs = glob(['Eigen/**']),
+    visibility = ['//visibility:public'],
+)
+"""
+)
