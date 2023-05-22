@@ -43,6 +43,7 @@ cc_library(
     hdrs = ["hello-time.h"],
     visibility = ["//main:__pkg__"],
 )
+注意 visibility = [“//main:pkg“] 表示hello-greet对于main/BUILD是可见的。
 
 该规则构建一个名为 hello-time 的库，通过 visibility 参数声明了谁可以使用这个库，默认情况下 (即未添加 visibility 参数时) 
 仅在同一个 BUILD 文件中可以使用；这里 //main:__pkg__ 表明 main 包可以使用这个库。
@@ -94,3 +95,31 @@ stage3-1
 1、lib/hello-time/hello-time.cc 中头文件包含改为 #include "lib/hello-time/hello-time.h" 或 #include "hello-time.h";
 2、main/BUILD 中 cc_binary 规则的 deps 参数修改 hello-time 的标签为 //lib/hello-time:hello-time 或 //lib/hello-time;
 3、main/hello-world.cc 中头文件包含改为 #include "lib/hello-time/hello-time.h";
+
+
+
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_import")
+
+cc_import(
+    name = "hello-greet",
+    hdrs = ["hello-greet.h"],
+    static_library = "libhello-greet.a",
+    shared_library = "libhello-greet.so",
+)
+
+cc_import(
+    name = "hello-time",
+    hdrs = ["hello-time.h"],
+    static_library = "libhello-time.a",
+    shared_library = "libhello-time.so",
+)
+
+
+cc_binary(
+    name = "hello-world",
+    srcs = ["hello-world.cc"],
+    deps = [
+        ":hello-greet",
+        ":hello-time",
+    ],
+)

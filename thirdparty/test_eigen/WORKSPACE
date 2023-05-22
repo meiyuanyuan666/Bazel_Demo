@@ -1,22 +1,15 @@
-workspace(name = "bazel_test")
- 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
- 
+
+EIGEN_COMMIT = "12e8d57108c50d8a63605c6eb0144c838c128337"
+EIGEN_SHA256 = "f689246e342c3955af48d26ce74ac34d21b579a00675c341721a735937919b02"
+
 http_archive(
-    name = "com_github_eigen_eigen",
-    sha256 = "dd254beb0bafc695d0f62ae1a222ff85b52dbaa3a16f76e781dce22d0d20a4a6",
-    strip_prefix = "eigen-eigen-5a0156e40feb",
+    name = "eigen3",
+    build_file = "//eigen3:BUILD",
+    sha256 = EIGEN_SHA256,
+    strip_prefix = "eigen-{commit}".format(commit = EIGEN_COMMIT),
     urls = [
-        "https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.bz2",
+        "https://storage.googleapis.com/mirror.tensorflow.org/gitlab.com/libeigen/eigen/-/archive/{commit}/eigen-{commit}.tar.gz".format(commit = EIGEN_COMMIT),
+        "https://gitlab.com/libeigen/eigen/-/archive/{commit}/eigen-{commit}.tar.gz".format(commit = EIGEN_COMMIT),
     ],
-    build_file_content =
-"""
-cc_library(
-    name = 'eigen',
-    srcs = [],
-    includes = ['.'],
-    hdrs = glob(['Eigen/**']),
-    visibility = ['//visibility:public'],
-)
-"""
 )
