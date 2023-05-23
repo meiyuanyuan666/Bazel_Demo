@@ -1,10 +1,6 @@
-workspace(name = "bazel_test")
- 
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
- 
- 
-git_repository(
+
+new_local_repository(
     name = "osqp",
-    commit = "7d16b70a10a152682204d745d814b6eb63dc5cd2",
-    remote = "https://github.com/oxfordcontrol/osqp.git",
+    path = "/usr/local/include",
+    build_file = "osqp/BUILD",
 )
