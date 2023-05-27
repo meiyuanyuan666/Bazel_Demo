@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "stage1",
+            "name": "mpc_osqp_test",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/stage1/bazel-bin/main/hello-world",
+            "program": "${workspaceFolder}/test_mpc_osqp/bazel-bin/src/mpc_osqp_test",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

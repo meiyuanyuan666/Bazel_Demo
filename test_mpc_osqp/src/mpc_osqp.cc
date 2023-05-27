@@ -19,6 +19,23 @@
 namespace apollo {
 namespace common {
 namespace math {
+/**
+ * @brief x_k+1 = Ad(k)x_k + Bd(k)u_k + C(k).
+ * @brief Ad(k)​,Bd(k)​和C(k)​分别为k时刻Linearized Error Dynamics的系统矩阵，输入矩阵和干扰矩阵.
+ * @brief 输入u_k​包括方向盘转角δ和纵向加速度a.
+ * @param matrix_a Ad(k)为k时刻系统矩阵、或者状态矩阵.
+ * @param matrix_b Bd(k)为k时刻输入矩阵、或者控制矩阵.
+ * @param matrix_q Q(k)为k时刻的状态惩罚矩阵.
+ * @param matrix_r R(k)为k时刻的输入惩罚矩阵.
+ * @param matrix_initial_x 初始化状态量.
+ * @param matrix_u_lower 输入量约束下限.
+ * @param matrix_u_upper 输入量约束上限.
+ * @param matrix_x_lower 状态量约束下限.
+ * @param matrix_x_upper 状态量约束上限.
+ * @param matrix_x_ref 参考状态量.
+ * @param max_iter The maximum iterations.
+ * @param horizon N为prediction horizon
+ */
 MpcOsqp::MpcOsqp(const Eigen::MatrixXd &matrix_a,
                  const Eigen::MatrixXd &matrix_b,
                  const Eigen::MatrixXd &matrix_q,
@@ -48,8 +65,24 @@ MpcOsqp::MpcOsqp(const Eigen::MatrixXd &matrix_a,
   ADEBUG << "state_dim" << state_dim_;
   ADEBUG << "control_dim_" << control_dim_;
   num_param_ = state_dim_ * (horizon_ + 1) + control_dim_ * horizon_;
+
+  mpc_log_file_.open("mpcosqp.txt", std::ios::out | std::ios::trunc);
+  mpc_log_file_ << std::fixed;
+  mpc_log_file_ << std::setprecision(6);
 }
 
+MpcOsqp::~MpcOsqp(){
+  	mpc_log_file_.close();                            // 关闭文档
+}
+
+/**
+ * @brief Hessian矩阵P形式如下：
+ * P = diag(Q,Q,...,Q,R,...,R)
+ * @param P_data 
+ * @param P_indices 
+ * @param P_indptr 
+ * @return ** void 
+ */
 void MpcOsqp::CalculateKernel(std::vector<c_float> *P_data,
                               std::vector<c_int> *P_indices,
                               std::vector<c_int> *P_indptr) {
@@ -92,6 +125,11 @@ void MpcOsqp::CalculateKernel(std::vector<c_float> *P_data,
 }
 
 // reference is always zero
+/**
+ * @brief 计算二次规划标准形式中的矩阵q
+ * Apollo输入的参考状态矩阵matrix_x_ref始终是0其实这个q也始终是0矩阵
+ * @return ** void 
+ */
 void MpcOsqp::CalculateGradient() {
   // populate the gradient vector
   gradient_ = Eigen::VectorXd::Zero(
@@ -105,6 +143,15 @@ void MpcOsqp::CalculateGradient() {
 }
 
 // equality constraints x(k+1) = A*x(k)
+/**
+ * @brief Ac矩阵包括上下两个部分，上部分对应等式约束，下部分对应不等式约束，
+ * 每个部分又分为左右两部分，左部分对应于决策变量中的状态量x(k)部分，右部分对应决策变量中输入量u(k)部分。
+ * 按照分块矩阵往Ac里塞A,B,I 
+ * @param A_data 
+ * @param A_indices 
+ * @param A_indptr 
+ * @return ** void 
+ */
 void MpcOsqp::CalculateEqualityConstraint(std::vector<c_float> *A_data,
                                           std::vector<c_int> *A_indices,
                                           std::vector<c_int> *A_indptr) {
@@ -118,6 +165,8 @@ void MpcOsqp::CalculateEqualityConstraint(std::vector<c_float> *A_data,
       state_dim_ * (horizon_ + 1), state_dim_ * (horizon_ + 1));
   ADEBUG << "state_identity_mat" << state_identity_mat;
 
+  //矩阵分块操作函数.block()的用法，提取块大小为(p,q),起始于(i,j)
+  //构建动态大小子矩阵matrix.block(i,j,p,q)
   matrix_constraint.block(0, 0, state_dim_ * (horizon_ + 1),
                           state_dim_ * (horizon_ + 1)) =
       -1 * state_identity_mat;
@@ -177,6 +226,12 @@ void MpcOsqp::CalculateEqualityConstraint(std::vector<c_float> *A_data,
   A_indptr->emplace_back(ind_A);
 }
 
+/**
+ * @brief 计算二次规划约束中的上边界，下边界矩阵l,u
+ * l = [-x_0 0...0 x_min...x_min u_min...u_min]
+ * u = [-x_0 0...0 x_max...x_max u_max...u_max]
+ * @return ** void 
+ */
 void MpcOsqp::CalculateConstraintVectors() {
   // evaluate the lower and the upper inequality vectors
   Eigen::VectorXd lowerInequality = Eigen::MatrixXd::Zero(
@@ -278,6 +333,15 @@ void MpcOsqp::FreeData(OSQPData *data) {
   c_free(data);
 }
 
+/**
+ * @brief OSQP Solver中的矩阵数据采取CSC格式
+ * 稀疏矩阵存储格式CSC（Compressed Sparse Columns Format）
+ * 根据输入的矩阵求解二次规划，求解结果取出控制序列放入control_cmd中，
+ * 然后control_cmd中第一个控制量就可以用于控制
+ * @param control_cmd 
+ * @return true 
+ * @return false 
+ */
 bool MpcOsqp::Solve(std::vector<double> *control_cmd) {
   ADEBUG << "Before Calc Gradient";
   CalculateGradient();
@@ -326,6 +390,7 @@ bool MpcOsqp::Solve(std::vector<double> *control_cmd) {
     return false;
   }
 
+  //add by meiyuanyuan 方向盘转角delta和纵向加速度a
   size_t first_control = state_dim_ * (horizon_ + 1);
   for (size_t i = 0; i < control_dim_; ++i) {
     control_cmd->at(i) = osqp_workspace->solution->x[i + first_control];

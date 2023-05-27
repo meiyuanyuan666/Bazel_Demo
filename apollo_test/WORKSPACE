@@ -1,0 +1,61 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+EIGEN_COMMIT = "12e8d57108c50d8a63605c6eb0144c838c128337"
+EIGEN_SHA256 = "f689246e342c3955af48d26ce74ac34d21b579a00675c341721a735937919b02"
+
+http_archive(
+    name = "eigen3",
+    build_file = "//eigen3:BUILD",
+    sha256 = EIGEN_SHA256,
+    strip_prefix = "eigen-{commit}".format(commit = EIGEN_COMMIT),
+    urls = [
+        "https://storage.googleapis.com/mirror.tensorflow.org/gitlab.com/libeigen/eigen/-/archive/{commit}/eigen-{commit}.tar.gz".format(commit = EIGEN_COMMIT),
+        "https://gitlab.com/libeigen/eigen/-/archive/{commit}/eigen-{commit}.tar.gz".format(commit = EIGEN_COMMIT),
+    ],
+)
+
+http_archive(
+    name = "gtest",
+    url = "https://github.com/google/googletest/archive/release-1.7.0.zip",
+    sha256 = "b58cb7547a28b2c718d1e38aee18a3659c9e3ff52440297e965f5edffe34b6d0",
+    build_file = "//gtest:BUILD",
+    strip_prefix = "googletest-release-1.7.0",
+)
+
+ 
+git_repository(
+    name = "com_github_gflags_gflags",
+    commit = "f7388c6655e699f777a5a74a3c9880b9cfaabe59",
+    remote = "https://github.com/gflags/gflags.git",
+)
+ 
+git_repository(
+    name = "glog",
+    commit = "0a2e5931bd5ff22fd3bf8999eb8ce776f159cda6",
+    remote = "https://github.com/google/glog.git",
+)
+
+
+new_local_repository(
+    name = "osqp",
+    path = "/usr/local/include",
+    build_file = "osqp/BUILD",
+)
+
+new_local_repository(
+    name = "boost",
+    build_file = "boost/BUILD",
+    path = "/usr/local/include",
+)
+
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "7892a35d979304a404400a101c46ce90e85ec9e2a766a86041bb361f626247f5",
+    strip_prefix = "protobuf-3.16.0",
+    url = "https://github.com/protocolbuffers/protobuf/archive/v3.16.0.tar.gz",
+)
+ 
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+ 
+protobuf_deps()

@@ -21,6 +21,9 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <fstream>
+#include <string>
+#include <iomanip> // setprecision注意包含这个头文件
 
 #include "Eigen/Eigen"
 #include "osqp/osqp.h"
@@ -34,6 +37,7 @@ class MpcOsqp {
  public:
   /**
    * @brief Solver for discrete-time model predictive control problem.
+   * @brief 要想提升整体的求解速度和求解成功率, 应该尽量少的使用等式约束。
    * @param matrix_a The system dynamic matrix
    * @param matrix_b The control matrix
    * @param matrix_q The cost matrix for control state
@@ -51,6 +55,8 @@ class MpcOsqp {
           const Eigen::MatrixXd &matrix_x_upper,
           const Eigen::MatrixXd &matrix_x_ref, const int max_iter,
           const int horizon, const double eps_abs);
+          
+  ~MpcOsqp();
 
   // control vector
   bool Solve(std::vector<double> *control_cmd);
@@ -96,6 +102,9 @@ class MpcOsqp {
   Eigen::VectorXd gradient_;
   Eigen::VectorXd lowerBound_;
   Eigen::VectorXd upperBound_;
+
+  // for logging purpose
+  std::fstream mpc_log_file_;
 };
 }  // namespace math
 }  // namespace common

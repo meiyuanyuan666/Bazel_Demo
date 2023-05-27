@@ -32,7 +32,7 @@ namespace math {
 TEST(MPCOSQPSolverTest, ComputationTimeTest) {
   const int states = 4;
   const int controls = 2;
-  const int horizon = 3;
+  const int horizon = 30;
   const int max_iter = 100;
   const double eps = 0.001;
   const double max = std::numeric_limits<double>::max();
