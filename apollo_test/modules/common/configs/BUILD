@@ -56,10 +56,12 @@ cc_binary(
     deps = [
         ":config_gflags",
         "//cyber:macros",
+        "//cyber:file",
         "//modules/common_msgs/basic_msgs:pnc_point_cc_proto",
         "//modules/common_msgs/config_msgs:vehicle_config_cc_proto",
         "//modules/common/math",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
