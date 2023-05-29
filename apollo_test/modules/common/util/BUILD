@@ -43,13 +43,13 @@ cc_binary(
         ":data_extraction",
         ":eigen_defs",
         ":factory",
-        # ":future",
+        ":future",
         # ":json_util",
         ":lru_cache",
         ":map_util",
         ":message_util",
         # ":perf_util",
-        ":string_util",
+        # ":string_util",
         ":time_util",
     ],
 )
@@ -92,14 +92,14 @@ cc_library(
     ],
 )
 
-# cc_library(
-#     name = "future",
-#     hdrs = ["future.h"],
-#     alwayslink = True,
-#     # deps = [
-#     #     "@com_google_absl//:absl",
-#     # ],
-# )
+cc_library(
+    name = "future",
+    hdrs = ["future.h"],
+    # alwayslink = True,
+    deps = [
+        "@com_google_absl//:absl",
+    ],
+)
 
 cc_library(
     name = "point_factory",
@@ -145,16 +145,17 @@ cc_library(
     ],
 )
 
-cc_library(
-    name = "string_util",
-    srcs = ["string_util.cc"],
-    hdrs = ["string_util.h"],
-    alwayslink = True,
-    # deps = [
-    #     ":future",
-    #     # "@com_google_absl//:absl",
-    # ],
-)
+#absl #error "C++ versions less than C++14 are not supported."错误暂时没有搞定
+# cc_library(
+#     name = "string_util",
+#     srcs = ["string_util.cc"],
+#     hdrs = ["string_util.h"],
+#     alwayslink = True,
+#     deps = [
+#         ":future",
+#         "@com_google_absl//:absl",
+#     ],
+# )
 
 cc_library(
     name = "message_util",
@@ -182,15 +183,15 @@ cc_test(
     ],
 )
 
-cc_test(
-    name = "string_util_test",
-    size = "small",
-    srcs = ["string_util_test.cc"],
-    deps = [
-        ":string_util",
-        "@com_google_googletest//:gtest_main",
-    ],
-)
+# cc_test(
+#     name = "string_util_test",
+#     size = "small",
+#     srcs = ["string_util_test.cc"],
+#     deps = [
+#         ":string_util",
+#         "@com_google_googletest//:gtest_main",
+#     ],
+# )
 
 cc_library(
     name = "time_util",

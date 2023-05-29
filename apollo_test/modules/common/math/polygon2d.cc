@@ -26,7 +26,7 @@
 
 #include "cyber/log.h"
 #include "modules/common/math/math_utils.h"
-#include "modules/common/util/string_util.h"
+// #include "modules/common/util/string_util.h"
 
 namespace apollo {
 namespace common {

@@ -208,3 +208,6 @@ cc_binary(
 )
 
 参数 linkstatic 来指定使用静态库还是共享库进行目标构建，更为详细的说明可见 Bazel官网。
+
+如何在 Ubuntu 18.04 LTS 系统中安装多版本 GCC 编译器
+https://www.sysgeek.cn/ubuntu-install-gcc-compiler/

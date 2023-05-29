@@ -49,6 +49,20 @@ new_local_repository(
     path = "/usr/local/include",
 )
 
+new_local_repository(
+        name = "com_google_absl",
+        # build_file = clean_dep("//third_party/absl:absl.BUILD"),
+        build_file = "absl/BUILD",
+        path = "/usr/local/include",
+)
+# Abseil
+# http_archive(
+#     name = "com_google_absl",
+#     strip_prefix = "abseil-cpp-master",
+#     urls = ["https://github.com/abseil/abseil-cpp/archive/master.zip"],
+# )
+
+
 http_archive(
     name = "com_google_protobuf",
     sha256 = "7892a35d979304a404400a101c46ce90e85ec9e2a766a86041bb361f626247f5",

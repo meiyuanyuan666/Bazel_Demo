@@ -23,8 +23,8 @@
 
 #include <string>
 
-// #include "absl/strings/str_format.h"
-// #include "modules/common/util/future.h"
+#include "absl/strings/str_format.h"
+#include "modules/common/util/future.h"
 
 #define FORMAT_TIMESTAMP(timestamp) \
   std::fixed << std::setprecision(9) << timestamp
@@ -46,8 +46,8 @@ struct DebugStringFormatter {
   }
 };
 
-// std::string EncodeBase64(std::string_view in);
-std::string EncodeBase64(std::string in);
+std::string EncodeBase64(std::string_view in);
+// std::string EncodeBase64(std::string in);
 }  // namespace util
 }  // namespace common
 }  // namespace apollo
