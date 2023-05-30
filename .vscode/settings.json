@@ -73,6 +73,7 @@
         "lu": "cpp",
         "eigen": "cpp",
         "dense": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "bit": "cpp"
     }
 }

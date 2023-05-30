@@ -3,6 +3,7 @@ cc_test(
     srcs = ["main.cpp"],
     copts = ["-Iexternal/gtest/include"],
     deps = [
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
+

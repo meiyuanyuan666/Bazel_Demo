@@ -43,7 +43,7 @@ cc_binary(
         ":data_extraction",
         ":eigen_defs",
         ":factory",
-        ":future",
+        # ":future",
         # ":json_util",
         ":lru_cache",
         ":map_util",
@@ -67,7 +67,7 @@ cc_library(
     ),
     deps = [
         "//cyber:log",
-        "@boost",
+        "@boost//:boost",
         # "@com_github_nlohmann_json//:json",
         # "@com_google_absl//:absl",
         "@com_google_protobuf//:protobuf",
@@ -92,14 +92,14 @@ cc_library(
     ],
 )
 
-cc_library(
-    name = "future",
-    hdrs = ["future.h"],
-    # alwayslink = True,
-    deps = [
-        "@com_google_absl//:absl",
-    ],
-)
+# cc_library(
+#     name = "future",
+#     hdrs = ["future.h"],
+#     # alwayslink = True,
+#     deps = [
+#         "@com_google_absl//:absl",
+#     ],
+# )
 
 cc_library(
     name = "point_factory",
@@ -141,7 +141,7 @@ cc_library(
     alwayslink = True,
     deps = [
         "//cyber:log",
-        "@boost",
+        "@boost//:boost",
     ],
 )
 
@@ -169,6 +169,7 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
+# TDO by mei
 cc_test(
     name = "message_util_test",
     size = "small",
@@ -178,6 +179,7 @@ cc_test(
     ],
     deps = [
         ":message_util",
+        "//cyber:file",
         "//modules/common/util/testdata:simple_cc_proto",
         "@com_google_googletest//:gtest_main",
     ],
@@ -227,6 +229,7 @@ cc_library(
     alwayslink = True,
     deps = [
         "//cyber:log",
+        "//cyber:macros",
     ],
 )
 
@@ -286,7 +289,7 @@ cc_library(
     alwayslink = True,
     deps = [
         "//cyber:log",
-        "//modules/common/math",
+        "//modules/common/math:vec2d",
     ],
 )
 

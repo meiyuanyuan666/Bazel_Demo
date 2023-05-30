@@ -24,7 +24,7 @@
 
 #include "google/protobuf/descriptor.h"
 #include "modules/common_msgs/basic_msgs/error_code.pb.h"
-#include "modules/common/util/future.h"
+// #include "modules/common/util/future.h"
 
 /**
  * @namespace apollo::common
@@ -48,8 +48,10 @@ class Status {
    * @param code the error code.
    * @param msg the message associated with the error.
    */
-  explicit Status(ErrorCode code = ErrorCode::OK, std::string_view msg = "")
-      : code_(code), msg_(msg.data()) {}
+  // explicit Status(ErrorCode code = ErrorCode::OK, std::string_view msg = "")
+  //     : code_(code), msg_(msg.data()) {}
+  explicit Status(ErrorCode code = ErrorCode::OK, std::string msg = "")
+    : code_(code), msg_(msg.data()) {}
 
   ~Status() = default;
 

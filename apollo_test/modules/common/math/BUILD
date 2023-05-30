@@ -1,6 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
 # load("//tools:cpplint.bzl", "cpplint")
 # load("//tools/install:install.bzl", "install")
+package(default_visibility = ["//visibility:public"])
 
 # install(
 #     name = "install",
@@ -12,7 +13,6 @@ load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
 #     ],
 #     visibility = ["//visibility:public"],
 # )
-
 
 cc_binary(
     name = "libmath.so",
@@ -47,7 +47,7 @@ cc_library(
         "//cyber:log",
         "//modules/common_msgs/basic_msgs:geometry_cc_proto",
         "//modules/common_msgs/basic_msgs:pnc_point_cc_proto",
-        "//modules/common/util:util_tool",
+        # "//modules/common/util:util_tool",
         # "@com_google_absl//:absl",
         "@eigen3//:eigen3",
         "@osqp//:osqp",
@@ -99,7 +99,7 @@ cc_library(
     deps = [
         ":math_utils",
         "//cyber:log",
-        "//modules/common/util:util_tool",
+        # "//modules/common/util:util_tool",
         # "@com_google_absl//:absl",
         "@osqp//:osqp",
     ],

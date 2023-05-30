@@ -211,3 +211,18 @@ cc_binary(
 
 如何在 Ubuntu 18.04 LTS 系统中安装多版本 GCC 编译器
 https://www.sysgeek.cn/ubuntu-install-gcc-compiler/
+
+
+Linux安装googletest-release-1.7.0
+安装包见FTP文件夹
+cd googletest-release-1.7.0/
+cmake -DBUILD_SHARED_LIBS=ON .
+make
+sudo cp -a include/gtest /usr/include  // 将编译的静态文件链接，下同
+sudo cp -a libgtest_main.so libgtest.so /usr/lib/
+sudo ldconfig -v | grep gtest   // 查询是否链接成功
+
+如果看到输出
+	libgtest_main.so -> libgtest_main.so
+	libgtest.so -> libgtest.so
+则表明安装成功。

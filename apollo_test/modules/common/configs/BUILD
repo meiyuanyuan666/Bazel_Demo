@@ -29,6 +29,7 @@ cc_binary(
     ],
 )
 
+# TDO by mei
 cc_library(
     name = "config_gflags",
     srcs = ["libconfig_gflags.so"],
@@ -59,11 +60,12 @@ cc_binary(
         "//cyber:file",
         "//modules/common_msgs/basic_msgs:pnc_point_cc_proto",
         "//modules/common_msgs/config_msgs:vehicle_config_cc_proto",
-        "//modules/common/math",
+        "//modules/common/math:math",
     ],
     visibility = ["//visibility:public"],
 )
 
+# TDO by mei
 cc_library(
     name = "vehicle_config_helper",
     srcs = ["libvehicle_config_helper.so"],
@@ -76,12 +78,13 @@ cc_library(
         "//cyber:macros",
         "//cyber:file",
         "//modules/common_msgs/config_msgs:vehicle_config_cc_proto",
-        "//modules/common/math",
+        "//modules/common/math:math",
         "//modules/common_msgs/basic_msgs:pnc_point_cc_proto",
     ],
     visibility = ["//visibility:public"],
 )
 
+# TDO by mei
 cc_test(
     name = "vehicle_config_helper_test",
     size = "small",

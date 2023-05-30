@@ -21,7 +21,7 @@ cc_library(
     srcs = ["libstatus.so"],
     deps = [
         "//modules/common_msgs/basic_msgs:error_code_cc_proto",
-        "//modules/common/util:util_tool",
+        # "//modules/common/util:util_tool",
         "@com_google_protobuf//:protobuf",
     ],
     alwayslink = True,
@@ -32,7 +32,7 @@ cc_binary(
     srcs = ["status.h"],
     deps = [
         "//modules/common_msgs/basic_msgs:error_code_cc_proto",
-        "//modules/common/util:util_tool",
+        # "//modules/common/util:util_tool",
         "@com_google_protobuf//:protobuf",
     ],
     linkshared = True,
